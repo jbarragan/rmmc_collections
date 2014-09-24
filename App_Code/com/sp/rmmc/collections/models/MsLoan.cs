@@ -7,7 +7,7 @@ using System.Data.OleDb;
 using System.Data.Common;
 
 using com.sp.rmmc.common.models;
-namespace com.sp.rmmc.foreclosures.models
+namespace com.sp.rmmc.collections.models
 {
     public class MsLoan : ForeclosuresCommonModel
     {

@@ -10,11 +10,11 @@ public partial class lossmitigation_Collections_Default : System.Web.UI.Page
 {
     protected List<Delinquent> all_in_three_month_delinquent = new List<Delinquent>();
     protected List<Delinquent> in_three_month_delinquent = new List<Delinquent>();
-    Decimal in_three_month_delinquent_total = 0M;    
+    protected Decimal in_three_month_delinquent_total = 0M;    
     protected List<Delinquent> in_three_month_delinquent_fha = new List<Delinquent>();
-    Decimal in_three_month_delinquent_fha_total = 0M;
+    protected Decimal in_three_month_delinquent_fha_total = 0M;
     protected List<Delinquent> in_three_month_delinquent_va = new List<Delinquent>();
-    Decimal in_three_month_delinquent_va_total = 0M;
+    protected Decimal in_three_month_delinquent_va_total = 0M;
     
     protected void Page_Load(object sender, EventArgs e)
     {

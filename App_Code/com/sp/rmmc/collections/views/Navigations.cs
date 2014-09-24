@@ -62,7 +62,7 @@ namespace com.sp.rmmc.collections.views
             foreach (Nav n in navs)
             {
                 if (active == n.text) active_class = @" class=""active"""; else active_class = "";
-                s += @"<li" + active_class +  @"><a href=""" + n.link + @""">" + n.text +"</a></li>";
+                s += @"<li" + active_class + @"><a href=""" + n.link + @""">" + n.text + "</a></li>";
             }
             return s + nav_end;
         }
@@ -98,4 +98,5 @@ namespace com.sp.rmmc.collections.views
             }
             return s + nav_end;
         }
+    }
 }
