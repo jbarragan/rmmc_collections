@@ -1,0 +1,16 @@
+/* Dropdowns */
+.bs-menus {
+  min-height: 180px;
+}
+.bs-menus > .pull-left + .pull-left {
+  margin-left: 20px;
+}
+.bs-menus .dropup > .dropdown-menu,
+.bs-menus .dropdown > .dropdown-menu {
+  display: block;
+  position: static;
+  margin-bottom: 5px;
+  *width: 180px;
+  max-height: 70px;
+  overflow-y: auto;
+}
