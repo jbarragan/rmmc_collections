@@ -15,6 +15,8 @@ public partial class lossmitigation_Collections_Default : System.Web.UI.Page
     protected Decimal in_three_month_delinquent_fha_total = 0M;
     protected List<Delinquent> in_three_month_delinquent_va = new List<Delinquent>();
     protected Decimal in_three_month_delinquent_va_total = 0M;
+    protected List<Delinquent> in_three_month_delinquent_conv = new List<Delinquent>();
+    protected Decimal in_three_month_delinquent_conv_total = 0M;
     
     protected void Page_Load(object sender, EventArgs e)
     {
@@ -25,6 +27,7 @@ public partial class lossmitigation_Collections_Default : System.Web.UI.Page
             in_three_month_delinquent_total += d.loan.prin_bal;
             if (d.loan.loan_type == "FHA"){ in_three_month_delinquent_fha.Add(d); in_three_month_delinquent_fha_total += d.loan.prin_bal; }
             if (d.loan.loan_type == "VA"){ in_three_month_delinquent_va.Add(d); in_three_month_delinquent_va_total += d.loan.prin_bal; }
+            if (d.loan.loan_type == "CNV" || d.loan.loan_type == "CONV" ){ in_three_month_delinquent_conv.Add(d); in_three_month_delinquent_conv_total += d.loan.prin_bal; }
         }    
     }
 }
