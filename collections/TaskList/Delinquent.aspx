@@ -31,7 +31,7 @@
     <!-- Example row of columns -->
     <div class="row">
         <div class="span12">
-        <h2>3-Month Delinquent (<%= in_three_month_delinquent.Count %> UPB: <%= in_three_month_delinquent_total.ToString("C") %>)
+        <h2>3-Month (<%= in_three_month_delinquent.Count %> UPB: <%= in_three_month_delinquent_total.ToString("C") %>)
         <a class="btn btn-primary" onclick="var e = document.getElementById('in_three_month_delinquent_table'); e.style.display = e.style.display == 'block' ? 'none' : 'block';"><i class="icon-th-list icon-white"></i> Data</a>
         <a class="btn btn-inverse" onclick="var e = document.getElementById('in_three_month_delinquent_conditions'); e.style.display = e.style.display == 'block' ? 'none' : 'block';"><i class="icon-info-sign icon-white"></i> Conditions</a>
         <asp:Button ID="btn3MonthDelinquentToCSV" runat="server" Text="CSV" 
@@ -154,7 +154,6 @@
         <div class="span12">
             <div><a href="../Default.aspx">Back to Home</a></div>
         </div>
-    </div>
     </div>
     </div>
     </form>
