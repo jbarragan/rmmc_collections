@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Web;
 
-using com.sp.rmmc.commitments.models;
 
 /// <summary>
 /// Summary description for Export
@@ -17,17 +16,24 @@ namespace com.sp.rmmc.common.tools
             
         }
 
-        public static void writeCSV(string name, List<ICSVExport> list){
+        public static void writeCSV<T>(string name, List<T> list){
             CSVExport export = new CSVExport();
             export.write(name, list);
         }
 
-        public void write(string name, List<ICSVExport> list)
+        private List<ICSVExport> to_ICSVExport_list<T>(List<T> data)
+        {
+            List<ICSVExport> list = new List<ICSVExport>();
+            foreach (T d in data) list.Add((ICSVExport)d);
+            return list;
+        }
+
+        public void write<T>(string name, List<T> list)
         {
             string attachment = "attachment; filename=" +  name +
                                 "-" + DateTime.Today.ToString("yyyyMMdd") + ".csv";
             report_header(attachment);
-            report_body(list);
+            report_body(to_ICSVExport_list(list));
             report_footer();
         }
         
@@ -49,7 +55,10 @@ namespace com.sp.rmmc.common.tools
         private void report_body(List<ICSVExport> list)
         {
             foreach (ICSVExport item in list)
-                HttpContext.Current.Response.Write(item.to_csv);
+            {
+                HttpContext.Current.Response.Write(item.to_csv());
+                HttpContext.Current.Response.Write(Environment.NewLine);
+            }
         }
 
         private string removeSpecialCharacters(string s){

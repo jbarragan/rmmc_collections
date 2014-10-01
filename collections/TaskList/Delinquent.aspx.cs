@@ -5,6 +5,7 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 
 using com.sp.rmmc.collections.models;
+using com.sp.rmmc.common.tools;
 
 public partial class lossmitigation_Collections_Default : System.Web.UI.Page
 {
@@ -29,5 +30,10 @@ public partial class lossmitigation_Collections_Default : System.Web.UI.Page
             if (d.loan.loan_type == "VA"){ in_three_month_delinquent_va.Add(d); in_three_month_delinquent_va_total += d.loan.prin_bal; }
             if (d.loan.loan_type == "CNV" || d.loan.loan_type == "CONV" ){ in_three_month_delinquent_conv.Add(d); in_three_month_delinquent_conv_total += d.loan.prin_bal; }
         }    
+    }
+
+    protected void btn3MonthDelinquentToCSV_Click(object sender, EventArgs e)
+    {
+        CSVExport.writeCSV("3-month-delinquent" , all_in_three_month_delinquent);
     }
 }

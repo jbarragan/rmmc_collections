@@ -5,10 +5,11 @@ using System.Web;
 using System.Data.Common;
 
 using com.sp.rmmc.common.models;
+using com.sp.rmmc.common.tools;
 
 namespace com.sp.rmmc.collections.models
 {
-    public class Delinquent : ForeclosuresCommonModel
+    public class Delinquent : ForeclosuresCommonModel, ICSVExport
     {
         public decimal loan_id = 0M;
         public DateTimeObject due_date_first_payment = new DateTimeObject();
@@ -86,6 +87,11 @@ MsLoan.columns("base.loan_id") +  " " +
                 delinquent.loan = MsLoan.read(reader, pos);
             }
             return delinquent;
+        }
+
+        public String to_csv()
+        {
+            return this.loan_id.ToString();
         }
     }
 }
