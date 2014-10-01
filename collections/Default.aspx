@@ -20,7 +20,7 @@
     <!-- Example row of columns -->
     <div class="row">
         <div class="span12">
-            <p><a href="TaskList/Delinquent.aspx">Task List</a></p>
+            <p><a href="TaskList/Delinquent.aspx">Task List</a></p><p><a href="http://localrmmc/devintranet/lossmitigation/Collections/Default.aspx">LM Collections</a></p>
             <p class="text-error"><asp:Label ID="e" runat="server" Text="" ></asp:Label></p>
         </div>
     </div>
