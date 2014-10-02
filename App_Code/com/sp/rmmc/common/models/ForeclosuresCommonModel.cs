@@ -262,7 +262,7 @@ namespace com.sp.rmmc.common.models
         public static SqlConnection ms_sql_connection = null;
         protected static bool isMsSQLConnectionOpen()
         {
-            if (ms_sql_connection == null) return false;
+            if (ms_sql_connection == null || ms_sql_connection.State == ConnectionState.Closed) return false;
             return true;
         }
 
