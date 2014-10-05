@@ -90,6 +90,7 @@ namespace com.sp.rmmc.collections.views
             string s = nav_start;
             List<Nav> navs = new List<Nav>();
             Nav nav = new Nav(); nav.link = "Delinquent.aspx"; nav.text = "Delinquent Queue"; navs.Add(nav);
+            nav = new Nav(); nav.link = "DelinquentGrid.aspx"; nav.text = "Delinquent Grid"; navs.Add(nav);
             string active_class = "";
             foreach (Nav n in navs)
             {
