@@ -50,7 +50,7 @@ MsLoan.columns("base.loan_id") +  " " +
 
         public static string in_three_month_delinquent_conditions()
         {
-            string query = " and ( ms_loan_due_date_next_payment <= dateadd(mm, -3,getdate()) ) \n" +
+            string query = " and ( ms_loan_due_date_next_payment >= dateadd(mm, -3,getdate()) ) and ms_loan_due_date_next_payment <= dateadd(mm, -1,getdate()) \n" +
                            " and ( ms_loan_prin_bal > 0 ) \n";
             return query;
         }
