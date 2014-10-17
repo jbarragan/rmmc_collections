@@ -65,8 +65,14 @@ MsLoan.columns("base.loan_id") +  " " +
             string query = " and ( ms_loan_due_date_next_payment >= dateadd(mm, -3,getdate()) ) and ms_loan_due_date_next_payment <= getdate() \n" +
                            //" and ( ms_loan_due_date_next_payment >= dateadd(mm, -3,getdate()) ) and ms_loan_due_date_next_payment <= dateadd(mm, -1,getdate()) \n" +
                            " and ( ms_loan_type != 'FHA' or due_date_first_payment >= dateadd(yy, -1,getdate()) ) " +
-                           " and ( ms_loan_prin_bal > 0 ) \n";
+                           " and ( ms_loan_prin_bal > 0 ) \n" +
+                           exclude_bankruptcies();
             return query;
+        }
+
+        private static string exclude_bankruptcies()
+        {
+            return " and ( bankruptcy_filed_date is null ) \n";
         }
 
         public static List<Delinquent> in_three_month_delinquent_mode()
