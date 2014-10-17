@@ -21,7 +21,7 @@ namespace com.sp.rmmc.collections.views
             <a href=""Default.aspx"">Main Home</a>
           </li>
           <li>
-            <a href=""TaskList/Delinquent.aspx"">Task List</a>
+            <a href=""TaskList/Default.aspx"">Task List</a>
           </li>
           <li>
             <a href=""Default.aspx"">Home</a>
@@ -89,8 +89,9 @@ namespace com.sp.rmmc.collections.views
         {
             string s = nav_start;
             List<Nav> navs = new List<Nav>();
-            Nav nav = new Nav(); nav.link = "Delinquent.aspx"; nav.text = "Delinquent Queue"; navs.Add(nav);
-            nav = new Nav(); nav.link = "DelinquentGrid.aspx"; nav.text = "Delinquent Grid"; navs.Add(nav);
+            Nav nav = new Nav(); nav.link = "Default.aspx"; nav.text = "Delinquent Flow"; navs.Add(nav);
+            nav = new Nav(); nav.link = "Delinquent.aspx"; nav.text = "Delinquent Queue"; navs.Add(nav);
+            nav = new Nav(); nav.link = "DelinquentFlow.aspx"; nav.text = "Delinquent Grid"; navs.Add(nav);
             string active_class = "";
             foreach (Nav n in navs)
             {
