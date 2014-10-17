@@ -24,6 +24,13 @@ namespace com.sp.rmmc.collections.models
         public DateTimeObject promised_to_pay_date = new DateTimeObject();
         public DateTimeObject lm_reception = new DateTimeObject();
         public DateTimeObject repay_start_date = new DateTimeObject();
+        public DateTimeObject last_mail_letter = new DateTimeObject();
+        public DateTimeObject last_inspection_memo_date = new DateTimeObject();
+        public DateTimeObject last_bc_call_memo_date = new DateTimeObject();
+        public DateTimeObject last_unsuccess_contact_memo_date = new DateTimeObject();
+        public DateTimeObject last_success_contact_memo_date = new DateTimeObject();
+        
+        
         public MsLoan loan = new MsLoan();
 
         private static string base_query = "" +
@@ -43,6 +50,11 @@ namespace com.sp.rmmc.collections.models
 "  order by ms_credit_information.bankruptcy_filed_date ) as bankruptcy_filed_date, " +
 "(select top 1 memo.memo_notify_dt from ms_loan_memo memo, ms_memo_types where memo.loan_id = base.loan_id and memo.memo_type_id = ms_memo_types.memo_type_id and ms_memo_types.memo_type_desc = 'BC-Promised to Pay' and memo_notify_dt > getdate() order by memo_notify_dt desc ) as promised_to_pay_date, " +
 "(select top 1 repay.repay_start_date from ms_loan_repayment_plan repay where repay.loan_id = base.loan_id and repay.repay_start_date <= getdate() and repay.repay_end_date >= getdate() order by repay.repay_start_date desc ) as repay_start_date, " +
+"(select top 1 memo.memo_create_dt from ms_loan_memo memo, ms_memo_types where memo.loan_id = base.loan_id and memo.memo_type_id = ms_memo_types.memo_type_id and ms_memo_types.memo_type_desc = 'Correspondence' and (memo.memo_subject like '%60DAY LOSS MIT%' or memo.memo_subject like '%FNMA 60 Day%' or memo.memo_subject like '%HUD 3 MONTH LTR%')  order by memo_create_dt desc ) as last_mail_letter, " +
+"(select top 1 memo.memo_create_dt from ms_loan_memo memo, ms_memo_types where memo.loan_id = base.loan_id and memo.memo_type_id = ms_memo_types.memo_type_id and ms_memo_types.memo_type_desc like 'PI-%' order by memo_id desc ) as last_inspection_memo_date, " +
+"(select top 1 memo.memo_create_dt from ms_loan_memo memo, ms_memo_categories, ms_memo_types where memo.loan_id = base.loan_id and memo.memo_type_id = ms_memo_types.memo_type_id and memo.memo_category_id = ms_memo_categories.memo_category_id and (ms_memo_categories.memo_category_desc like '031%' or ms_memo_types.memo_type_desc like 'BC - Left Message%' or ms_memo_types.memo_type_desc like 'BC-Promised to Pay%' or ms_memo_types.memo_type_desc like 'BC-First Right Party Contact%') order by memo_create_dt desc ) as last_bc_call_memo_date, " +
+"(select top 1 memo.memo_create_dt from ms_loan_memo memo, ms_memo_categories, ms_memo_types where memo.loan_id = base.loan_id and memo.memo_type_id = ms_memo_types.memo_type_id and memo.memo_category_id = ms_memo_categories.memo_category_id and (ms_memo_categories.memo_category_desc like '031%' or ms_memo_types.memo_type_desc like 'BC - Left Message%') order by memo_create_dt desc ) as last_unsuccess_contact_memo_date, " +
+"(select top 1 memo.memo_create_dt from ms_loan_memo memo, ms_memo_types where memo.loan_id = base.loan_id and memo.memo_type_id = ms_memo_types.memo_type_id and (ms_memo_types.memo_type_desc like 'BC-Promised to Pay%' or ms_memo_types.memo_type_desc like 'BC-First Right Party Contact%') order by memo_create_dt desc ) as last_success_contact_memo_date, " +
 
 MsLoan.columns("base.loan_id") +  " " +
 "from ms_loan_information as base " +
@@ -50,7 +62,9 @@ MsLoan.columns("base.loan_id") +  " " +
 
         public static string in_three_month_delinquent_conditions()
         {
-            string query = " and ( ms_loan_due_date_next_payment >= dateadd(mm, -3,getdate()) ) and ms_loan_due_date_next_payment <= dateadd(mm, -1,getdate()) \n" +
+            string query = " and ( ms_loan_due_date_next_payment >= dateadd(mm, -3,getdate()) ) and ms_loan_due_date_next_payment <= getdate() \n" +
+                           //" and ( ms_loan_due_date_next_payment >= dateadd(mm, -3,getdate()) ) and ms_loan_due_date_next_payment <= dateadd(mm, -1,getdate()) \n" +
+                           " and ( ms_loan_type != 'FHA' or due_date_first_payment >= dateadd(yy, -1,getdate()) ) " +
                            " and ( ms_loan_prin_bal > 0 ) \n";
             return query;
         }
@@ -106,6 +120,11 @@ MsLoan.columns("base.loan_id") +  " " +
             delinquent.bankruptcy_filed_date = readDBDateObject(reader, pos++, DateTime.Now);
             delinquent.promised_to_pay_date = readDBDateObject(reader, pos++, DateTime.Now);
             delinquent.repay_start_date = readDBDateObject(reader, pos++, DateTime.Now);
+            delinquent.last_mail_letter = readDBDateObject(reader, pos++, DateTime.Now);
+            delinquent.last_inspection_memo_date = readDBDateObject(reader, pos++, DateTime.Now);
+            delinquent.last_bc_call_memo_date = readDBDateObject(reader, pos++, DateTime.Now);
+            delinquent.last_unsuccess_contact_memo_date = readDBDateObject(reader, pos++, DateTime.Now);
+            delinquent.last_success_contact_memo_date = readDBDateObject(reader, pos++, DateTime.Now);
 
             if (delinquent.loan_id > 0)
             {
@@ -127,6 +146,44 @@ MsLoan.columns("base.loan_id") +  " " +
                    this.promised_to_pay_date.isNull && 
                    this.lm_reception.isNull && 
                    this.repay_start_date.isNull;
+        }
+
+        public string last_call_result()
+        {
+            if (this.last_bc_call_memo_date.isNull) return "";
+            if (this.last_bc_call_memo_date.date == this.last_success_contact_memo_date.date) return "Contact";
+            return "No Contact";
+        }
+
+        public string last_call_result_color()
+        {
+            if (this.last_bc_call_memo_date.isNull) return "";
+            if (this.last_bc_call_memo_date.date == this.last_success_contact_memo_date.date) return "is-success";
+            return "is-unsuccess";
+        }
+
+        public bool last_mail_letter_valid()
+        {
+            if (this.last_mail_letter.isNull) return false;
+            if (this.last_mail_letter.date.Month == DateTime.Today.Month) return true;
+            return false;
+        }
+
+        public bool last_inspection_valid()
+        {
+            if( this.loan.loan_type == "FHA" ) return true;
+            if (this.last_inspection_memo_date.isNull) return false;
+            if( this.last_mail_letter.isNull ) return false;
+            if (this.last_inspection_memo_date.date > this.last_mail_letter.date) return true;
+            return false;
+        }
+
+        public bool last_call_date_valid()
+        {
+            if (this.last_bc_call_memo_date.isNull) return false;
+            if( this.last_mail_letter.isNull ) return false;
+            if (this.last_bc_call_memo_date.date > this.last_mail_letter.date) return true;
+            return false;
         }
 
         private static void set_lm_reception(List<Delinquent> list)
