@@ -27,6 +27,7 @@ namespace com.sp.rmmc.collections.models
         public DateTimeObject last_mail_letter = new DateTimeObject();
         public DateTimeObject last_inspection_memo_date = new DateTimeObject();
         public DateTimeObject last_bc_call_memo_date = new DateTimeObject();
+        public String last_bc_call_memo_user_id = "";
         public DateTimeObject last_unsuccess_contact_memo_date = new DateTimeObject();
         public DateTimeObject last_success_contact_memo_date = new DateTimeObject();
         
@@ -53,6 +54,7 @@ namespace com.sp.rmmc.collections.models
 "(select top 1 memo.memo_create_dt from ms_loan_memo memo, ms_memo_types where memo.loan_id = base.loan_id and memo.memo_type_id = ms_memo_types.memo_type_id and ms_memo_types.memo_type_desc = 'Correspondence' and (memo.memo_subject like '%60DAY LOSS MIT%' or memo.memo_subject like '%FNMA 60 Day%' or memo.memo_subject like '%HUD 3 MONTH LTR%')  order by memo_create_dt desc ) as last_mail_letter, " +
 "(select top 1 memo.memo_create_dt from ms_loan_memo memo, ms_memo_types where memo.loan_id = base.loan_id and memo.memo_type_id = ms_memo_types.memo_type_id and ms_memo_types.memo_type_desc like 'PI-%' order by memo_id desc ) as last_inspection_memo_date, " +
 "(select top 1 memo.memo_create_dt from ms_loan_memo memo, ms_memo_categories, ms_memo_types where memo.loan_id = base.loan_id and memo.memo_type_id = ms_memo_types.memo_type_id and memo.memo_category_id = ms_memo_categories.memo_category_id and (ms_memo_categories.memo_category_desc like '031%' or ms_memo_types.memo_type_desc like 'BC - Left Message%' or ms_memo_types.memo_type_desc like 'BC-Promised to Pay%' or ms_memo_types.memo_type_desc like 'BC-First Right Party Contact%') order by memo_create_dt desc ) as last_bc_call_memo_date, " +
+"(select top 1 memo.user_id from ms_loan_memo memo, ms_memo_categories, ms_memo_types where memo.loan_id = base.loan_id and memo.memo_type_id = ms_memo_types.memo_type_id and memo.memo_category_id = ms_memo_categories.memo_category_id and (ms_memo_categories.memo_category_desc like '031%' or ms_memo_types.memo_type_desc like 'BC - Left Message%' or ms_memo_types.memo_type_desc like 'BC-Promised to Pay%' or ms_memo_types.memo_type_desc like 'BC-First Right Party Contact%') order by memo_create_dt desc ) as last_bc_call_memo_user_id, " +
 "(select top 1 memo.memo_create_dt from ms_loan_memo memo, ms_memo_categories, ms_memo_types where memo.loan_id = base.loan_id and memo.memo_type_id = ms_memo_types.memo_type_id and memo.memo_category_id = ms_memo_categories.memo_category_id and (ms_memo_categories.memo_category_desc like '031%' or ms_memo_types.memo_type_desc like 'BC - Left Message%') order by memo_create_dt desc ) as last_unsuccess_contact_memo_date, " +
 "(select top 1 memo.memo_create_dt from ms_loan_memo memo, ms_memo_types where memo.loan_id = base.loan_id and memo.memo_type_id = ms_memo_types.memo_type_id and (ms_memo_types.memo_type_desc like 'BC-Promised to Pay%' or ms_memo_types.memo_type_desc like 'BC-First Right Party Contact%') order by memo_create_dt desc ) as last_success_contact_memo_date, " +
 
@@ -128,6 +130,7 @@ MsLoan.columns("base.loan_id") +  " " +
             delinquent.last_mail_letter = readDBDateObject(reader, pos++, DateTime.Now);
             delinquent.last_inspection_memo_date = readDBDateObject(reader, pos++, DateTime.Now);
             delinquent.last_bc_call_memo_date = readDBDateObject(reader, pos++, DateTime.Now);
+            delinquent.last_bc_call_memo_user_id = readDBString(reader, pos++);
             delinquent.last_unsuccess_contact_memo_date = readDBDateObject(reader, pos++, DateTime.Now);
             delinquent.last_success_contact_memo_date = readDBDateObject(reader, pos++, DateTime.Now);
 
@@ -158,6 +161,13 @@ MsLoan.columns("base.loan_id") +  " " +
             if (this.last_bc_call_memo_date.isNull) return "";
             if (this.last_bc_call_memo_date.date == this.last_success_contact_memo_date.date) return "Contact";
             return "No Contact";
+        }
+
+        public string last_call_result_with_user_id()
+        {
+            if (this.last_bc_call_memo_date.isNull) return "";
+            if (this.last_bc_call_memo_date.date == this.last_success_contact_memo_date.date) return "Contact - " + this.last_bc_call_memo_user_id;
+            return "No Contact - " + this.last_bc_call_memo_user_id;
         }
 
         public string last_call_result_color()
