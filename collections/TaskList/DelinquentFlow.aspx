@@ -79,7 +79,7 @@
                 <td class="<%= d.last_mail_letter_valid() == false ? "is-unsuccess" : "is-success" %>"><%= d.last_mail_letter.ToShortDateString() %> </td>
                 <td class="<%= d.last_inspection_valid() == false ? "is-unsuccess" : "is-success" %>"><%= d.last_inspection_memo_date.ToShortDateString() %> </td>
                 <td class="<%= d.last_call_date_valid() == false ? "is-unsuccess" : "is-success" %>"><%= d.last_bc_call_memo_date.ToShortDateString() %> </td>
-                <td class="<%= d.last_call_result_color() %>"><%= d.last_call_result() %> </td>
+                <td class="<%= d.last_call_result_color() %>"><%= d.last_call_result_with_user_id()%> </td>
              </tr>
             <%
                 }
