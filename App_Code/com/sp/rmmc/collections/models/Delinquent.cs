@@ -65,7 +65,6 @@ MsLoan.columns("base.loan_id") +  " " +
         public static string in_three_month_delinquent_conditions()
         {
             string query = " and ( ms_loan_due_date_next_payment >= dateadd(mm, -3,getdate()) ) and ms_loan_due_date_next_payment <= dateadd(mm, -2,getdate()) \n" +
-                           " and ( ms_loan_type != 'FHA' or due_date_first_payment >= dateadd(yy, -1,getdate()) ) " +
                            " and ( ms_loan_prin_bal > 0 ) \n" +
                            exclude_bankruptcies() +
                            exclude_demands();
@@ -132,8 +131,8 @@ MsLoan.columns("base.loan_id") +  " " +
             Delinquent delinquent = new Delinquent();
             int pos = 0;
             delinquent.loan_id = readDBDecimal(reader, pos++);
-            delinquent.due_date_next_payment = readDBDateObject(reader, pos++, DateTime.Now);
             delinquent.due_date_first_payment = readDBDateObject(reader, pos++, DateTime.Now);
+            delinquent.due_date_next_payment = readDBDateObject(reader, pos++, DateTime.Now);
             delinquent.unapplied_bal = readDBDecimal(reader, pos++);
             delinquent.last_payments_balance = readDBDecimal(reader, pos++);
             delinquent.late_chrg_due_amt = readDBDecimal(reader, pos++);
