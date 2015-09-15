@@ -1,0 +1,3 @@
+alter table collection_history_loan_details add
+	collection_promise_to_pay_events_last_reg_paid_dt  datetime,
+	collection_promise_to_pay_events_last_promise_to_pay_memo_create_dt datetime;

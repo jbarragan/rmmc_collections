@@ -44,7 +44,7 @@ namespace com.sp.rmmc.collections.models
 "(select top 1 ms_credit_information.default_reason_code from ms_credit_information where ms_credit_information.loan_id = base.loan_id order by ms_credit_information.default_reason_code ) as default_reason_code, " +
 "(select top 1 hist.paid_dt from ms_loan_history hist where hist.loan_id = base.loan_id and hist.trans_type_cd in ('REG') and hist.paid_dt >=  dateadd(mm, -3, getdate()) order by hist.paid_dt desc) as last_paid_date_in_3_months, " +
 "(select top 1 misc.misc_dt_value from ms_loan_misc_fields misc where misc_field_id = 10020 and misc.loan_id = base.loan_id and misc.misc_dt_value > base.due_date_next_payment order by misc.misc_dt_value desc ) as demand_letter_due_date, " +
-"(select top 1 ms_credit_information.bankruptcy_filed_date from ms_credit_information where ms_credit_information.loan_id = base.loan_id and ms_credit_information.bankruptcy_filed_date > base.due_date_next_payment " +
+"(select top 1 ms_credit_information.bankruptcy_filed_date from ms_credit_information where ms_credit_information.loan_id = base.loan_id  " +
 "  and ( select top 1 ms_bankruptcy_info.discharge_date from ms_bankruptcy_info where ms_bankruptcy_info.loan_id = base.loan_id order by ms_bankruptcy_info.discharge_date ) is null " +
 "  and ( select top 1 ms_bankruptcy_info.case_dismissed_date from ms_bankruptcy_info where ms_bankruptcy_info.loan_id = base.loan_id order by ms_bankruptcy_info.case_dismissed_date ) is null " +
 "  and ( select top 1 ms_bankruptcy_info.closed_date from ms_bankruptcy_info where ms_bankruptcy_info.loan_id = base.loan_id order by ms_bankruptcy_info.closed_date ) is null " +
@@ -65,9 +65,9 @@ MsLoan.columns("base.loan_id") +  " " +
         public static string in_three_month_delinquent_conditions()
         {
             string query = " and ( ms_loan_due_date_next_payment >= dateadd(mm, -3,getdate()) ) and ms_loan_due_date_next_payment <= dateadd(mm, -2,getdate()) \n" +
-                           " and ( ms_loan_type != 'FHA' or due_date_first_payment >= dateadd(yy, -1,getdate()) ) " +
                            " and ( ms_loan_prin_bal > 0 ) \n" +
-                           exclude_bankruptcies();
+                           exclude_bankruptcies() +
+                           exclude_demands();
             return query;
         }
 
@@ -76,13 +76,37 @@ MsLoan.columns("base.loan_id") +  " " +
             return " and ( bankruptcy_filed_date is null ) \n";
         }
 
+        private static string exclude_demands()
+        {
+            return " and ( demand_letter_due_date is null ) \n"; // filter out loans in demand
+        }
+
+        public static List<Delinquent> exclude_loss_mitigations(List<Delinquent> list)
+        {
+            List<Delinquent> result_list = new List<Delinquent>();
+            foreach(Delinquent d in list){
+                if( d.lm_reception.isNull) result_list.Add(d);
+            }
+            return result_list;
+        }
+
+
         public static List<Delinquent> in_three_month_delinquent_mode()
         {
             String query = base_query + in_three_month_delinquent_conditions();
             query += " order by ms_loan_due_date_next_payment";
             List<Delinquent> result_list = get_list(query);
+            //List<Delinquent> result_list = new List<Delinquent>();
             set_lm_reception(result_list);
-            return result_list;
+            return exclude_loss_mitigations(result_list);
+        }
+
+
+        public static string in_three_month_delinquent_mode_query()
+        {
+            String query = base_query + in_three_month_delinquent_conditions();
+            query += " order by ms_loan_due_date_next_payment";
+            return query;
         }
 
         private static List<Delinquent> get_list(String query)
@@ -116,8 +140,8 @@ MsLoan.columns("base.loan_id") +  " " +
             Delinquent delinquent = new Delinquent();
             int pos = 0;
             delinquent.loan_id = readDBDecimal(reader, pos++);
-            delinquent.due_date_next_payment = readDBDateObject(reader, pos++, DateTime.Now);
             delinquent.due_date_first_payment = readDBDateObject(reader, pos++, DateTime.Now);
+            delinquent.due_date_next_payment = readDBDateObject(reader, pos++, DateTime.Now);
             delinquent.unapplied_bal = readDBDecimal(reader, pos++);
             delinquent.last_payments_balance = readDBDecimal(reader, pos++);
             delinquent.late_chrg_due_amt = readDBDecimal(reader, pos++);

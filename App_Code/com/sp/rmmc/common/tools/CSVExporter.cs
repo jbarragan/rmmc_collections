@@ -11,13 +11,22 @@ namespace com.sp.rmmc.common.tools
 {
     public class CSVExport
     {
+        public string headers = null;
         public CSVExport()
         {
             
         }
 
-        public static void writeCSV<T>(string name, List<T> list){
+        public static void writeCSV<T>(string name, List<T> list)
+        {
             CSVExport export = new CSVExport();
+            export.write(name, list);
+        }
+
+        public static void writeHeadersAndCSV<T>(string name, string headers, List<T> list)
+        {
+            CSVExport export = new CSVExport();
+            export.headers = headers;
             export.write(name, list);
         }
 
@@ -54,6 +63,11 @@ namespace com.sp.rmmc.common.tools
 
         private void report_body(List<ICSVExport> list)
         {
+            if (headers != null)
+            {
+                HttpContext.Current.Response.Write(headers);
+                HttpContext.Current.Response.Write(Environment.NewLine);
+            }
             foreach (ICSVExport item in list)
             {
                 HttpContext.Current.Response.Write(item.to_csv());
