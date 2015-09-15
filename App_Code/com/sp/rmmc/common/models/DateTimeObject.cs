@@ -62,6 +62,12 @@ namespace com.sp.rmmc.common.models
             return s;
         }
 
+        public object toDBInsert()
+        {
+            if (this.isNull) return DBNull.Value;
+            return this.date;
+        }
+
 
     }
 }

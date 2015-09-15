@@ -96,8 +96,17 @@ MsLoan.columns("base.loan_id") +  " " +
             String query = base_query + in_three_month_delinquent_conditions();
             query += " order by ms_loan_due_date_next_payment";
             List<Delinquent> result_list = get_list(query);
+            //List<Delinquent> result_list = new List<Delinquent>();
             set_lm_reception(result_list);
             return exclude_loss_mitigations(result_list);
+        }
+
+
+        public static string in_three_month_delinquent_mode_query()
+        {
+            String query = base_query + in_three_month_delinquent_conditions();
+            query += " order by ms_loan_due_date_next_payment";
+            return query;
         }
 
         private static List<Delinquent> get_list(String query)
