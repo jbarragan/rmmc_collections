@@ -233,7 +233,8 @@
         <div class="span12">
         <a name="default_list"></a>
         <h2><%= this.workflow%> (<%= bfs.Count%>)</h2>
-        <a href="#collector_list">Collector List</a>
+        <a href="#collector_list">Collector List</a><br />
+        <asp:LinkButton ID="lbExport" runat="server" Text="Export" onclick="lbExport_Click"></asp:LinkButton>
         <table class="table table-striped">
             <tr>
                 <th>Loan#</th>
