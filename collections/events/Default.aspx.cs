@@ -6,6 +6,7 @@ using System.Web.UI.WebControls;
 using System.Text.RegularExpressions;
 
 using com.sp.rmmc.collections.models;
+using com.sp.rmmc.common.tools;
 
 public partial class lossmitigation_Default : System.Web.UI.Page
 {
@@ -248,6 +249,12 @@ public partial class lossmitigation_Default : System.Web.UI.Page
         {
             return default_value;
         }
+    }
+
+    protected void lbExport_Click(object sender, EventArgs e)
+    {
+        string filename = this.workflow + " " + DateTime.Today.ToString("MMMM yyyy") + " on ";
+        CSVExport.writeHeadersAndCSV(filename, "Loan#, Loan Name, Due Date of next payment, Investor, Collector", this.accepted_bfs);
     }
 
 }

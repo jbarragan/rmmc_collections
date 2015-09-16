@@ -7,10 +7,11 @@ using System.Data.Common;
 
 using com.sp.rmmc.common.models;
 using com.sp.rmmc.common.models.events;
+using com.sp.rmmc.common.tools;
 
 namespace com.sp.rmmc.collections.models
 {
-    public class BaseCollection : DbModel
+    public class BaseCollection : DbModel, ICSVExport
     {
         public decimal loan_id = 0M;
         public DateTimeObject demand_letter_due_date = new DateTimeObject();
@@ -106,6 +107,7 @@ namespace com.sp.rmmc.collections.models
             List<BaseCollection> all = this.get_loan_list(query);
             foreach (BaseCollection f in all) { f.type = COLLECTION_TYPE; collections.Add(f); }
             commonFilters(collections, removed_collections);
+            remove_repayment_plan(collections, removed_collections);
             (new LoanCollector()).get_collections_collector(collections);
         }
 
@@ -118,6 +120,7 @@ namespace com.sp.rmmc.collections.models
             List<BaseCollection> all = this.get_loan_list(query);
             foreach (BaseCollection f in all) { f.type = COLLECTION_TYPE; collections.Add(f); }
             commonFilters(collections, removed_collections);
+            remove_repayment_plan(collections, removed_collections);
             (new LoanCollector()).get_collections_collector(collections);
         }
 
@@ -268,14 +271,30 @@ namespace com.sp.rmmc.collections.models
             {
                 if (removed.Contains(f)) continue;
                 if (f.bankruptcy_filed_date.isNull == false &&
-                    (   f.bankruptcy_discharge_date.isNull == true &&
+                    (f.bankruptcy_discharge_date.isNull == true &&
                         f.bankruptcy_case_dismissed_date.isNull == true &&
                         f.bankruptcy_closed_date.isNull == true
                     )
                    )
-                {   
+                {
                     f.filter_reason = "Bankruptcy";
                     removed.Add(f);
+                }
+            }
+        }
+
+        private static void remove_repayment_plan(List<BaseCollection> accepted, List<BaseCollection> removed)
+        {
+            List<BaseCollection> all_accepted = new List<BaseCollection>();
+            all_accepted.AddRange(accepted);
+            foreach (BaseCollection f in all_accepted)
+            {
+                if (removed.Contains(f)) continue;
+                if ( f.mortgage_status == "12")
+                {
+                    f.filter_reason = "Repayment Plan";
+                    removed.Add(f);
+                    accepted.Remove(f);
                 }
             }
         }
@@ -334,6 +353,9 @@ namespace com.sp.rmmc.collections.models
 
         public void remove_lm(List<BaseCollection> accepted, List<BaseCollection> removed)
         {
+            // Stop removing LM from Collections
+            return;
+            /*
             foreach (BaseCollection f in accepted)
             {
                 if (removed.Contains(f)) continue;
@@ -343,6 +365,7 @@ namespace com.sp.rmmc.collections.models
                     removed.Add(f);
                 }
             }
+            */ 
         }
 
         public void remove_demands(List<BaseCollection> accepted, List<BaseCollection> removed)
@@ -504,6 +527,12 @@ namespace com.sp.rmmc.collections.models
                 this.mortgage_status == "" ||
                 this.mortgage_status == "67" ||
                 this.mortgage_status == "98");
+        }
+
+        public String to_csv()
+        {
+            return this.loan_id.ToString() + ",\"" + this.loan.loan_name + "\"," +
+                this.loan.due_date_next_payment.ToString() + ","  + this.loan.loan_type + "," + this.collector.collector;
         }
     }
 }
