@@ -133,6 +133,7 @@ namespace com.sp.rmmc.collections.models
             List<BaseCollection> all = this.get_loan_list(query);
             foreach (BaseCollection f in all) { f.type = COLLECTION_TYPE; collections.Add(f); }
             commonFilters(collections, removed_collections);
+            remove_loss_mitigation(collections, removed_collections);
             (new LoanCollector()).get_collections_collector(collections);
         }
 
@@ -145,6 +146,7 @@ namespace com.sp.rmmc.collections.models
             List<BaseCollection> all = this.get_loan_list(query);
             foreach (BaseCollection f in all) { f.type = COLLECTION_TYPE; collections.Add(f); }
             commonFilters(collections, removed_collections);
+            remove_loss_mitigation(collections, removed_collections);
             (new LoanCollector()).get_collections_collector(collections);
         }
 
@@ -155,8 +157,11 @@ namespace com.sp.rmmc.collections.models
             string query = "select " + columns + " from " + "( " + collections_17_days_cnv_c_mcm_delinquent_query + ")base where 1=1 " + collections_conditions();
             query = query + " order by ms_loan_id ";
             List<BaseCollection> all = this.get_loan_list(query);
-            foreach (BaseCollection f in all) { f.type = COLLECTION_TYPE; collections.Add(f); }
+            foreach (BaseCollection f in all) {
+                f.type = COLLECTION_TYPE; collections.Add(f);
+            }
             commonFilters(collections, removed_collections);
+            remove_loss_mitigation(collections, removed_collections);
             (new LoanCollector()).get_collections_collector(collections);
         }
 
@@ -299,6 +304,22 @@ namespace com.sp.rmmc.collections.models
             }
         }
 
+        private static void remove_loss_mitigation(List<BaseCollection> accepted, List<BaseCollection> removed)
+        {
+            List<BaseCollection> all_accepted = new List<BaseCollection>();
+            all_accepted.AddRange(accepted);
+            foreach (BaseCollection f in all_accepted)
+            {
+                if (removed.Contains(f)) continue;
+                if (f.mortgage_status == "09")
+                {
+                    f.filter_reason = "Loss Mitigation";
+                    removed.Add(f);
+                    accepted.Remove(f);
+                }
+            }
+        }
+
         private bool isBankruptcy()
         {
             BaseCollection f = this;
@@ -339,7 +360,7 @@ namespace com.sp.rmmc.collections.models
 
         public static string collections_conditions()
         {
-            string query = " and ( sale_date is null ) \n" +
+            string query = //" and ( sale_date is null ) \n" +
                            //" and ( ms_loan_id = 158939 ) \n" +
                            " and ( ms_loan_prin_bal > 0 )";
             return query;

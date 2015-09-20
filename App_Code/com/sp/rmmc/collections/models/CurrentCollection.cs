@@ -110,6 +110,7 @@ com.sp.rmmc.common.models.MsLoan.columns("base.loan_id") + " ";
                     " and   ( dateadd(mm, 1, base.due_date_next_payment) <= dateadd(dd, -2, getDate()) )" +
                     " and ms_credit_information.loan_id = base.loan_id " +
                     " and (base.loan_type = 'FHA') " +
+                    //" and (ms_credit_information.mortgage_status in ('42', '11', '12', '', '67', '98', 'AP', 'A0', 'AQ') or ms_credit_information.mortgage_status is null ) " +
                     ") ";
             }
         }
