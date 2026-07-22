@@ -1,0 +1,481 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="13.3">
+  <zoom_level>8</zoom_level>
+  <element>
+    <id>UMLSpecialState</id>
+    <coordinates>
+      <x>496</x>
+      <y>256</y>
+      <w>48</w>
+      <h>48</h>
+    </coordinates>
+    <panel_attributes>bg=yellow
+type=decision</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>536</x>
+      <y>264</y>
+      <w>80</w>
+      <h>32</h>
+    </coordinates>
+    <panel_attributes>Yes
+lt=&lt;-</panel_attributes>
+    <additional_attributes>80.0;20.0;10.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLState</id>
+    <coordinates>
+      <x>600</x>
+      <y>264</y>
+      <w>192</w>
+      <h>32</h>
+    </coordinates>
+    <panel_attributes>In Completed One Year or More 
+Current list
+bg=green</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>512</x>
+      <y>208</y>
+      <w>320</w>
+      <h>64</h>
+    </coordinates>
+    <panel_attributes>No, if more than 30 and less than 60 days delinquent?
+lt=&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;60.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLSpecialState</id>
+    <coordinates>
+      <x>496</x>
+      <y>168</y>
+      <w>48</w>
+      <h>48</h>
+    </coordinates>
+    <panel_attributes>bg=yellow
+type=decision</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>536</x>
+      <y>176</y>
+      <w>80</w>
+      <h>32</h>
+    </coordinates>
+    <panel_attributes>Yes
+lt=&lt;-</panel_attributes>
+    <additional_attributes>80.0;20.0;10.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>512</x>
+      <y>120</y>
+      <w>320</w>
+      <h>64</h>
+    </coordinates>
+    <panel_attributes>No, if more than 60 and less than 90 days delinquent?
+lt=&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;60.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLSpecialState</id>
+    <coordinates>
+      <x>496</x>
+      <y>80</y>
+      <w>48</w>
+      <h>48</h>
+    </coordinates>
+    <panel_attributes>bg=yellow
+type=decision</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>536</x>
+      <y>88</y>
+      <w>80</w>
+      <h>32</h>
+    </coordinates>
+    <panel_attributes>Yes
+lt=&lt;-</panel_attributes>
+    <additional_attributes>80.0;20.0;10.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>512</x>
+      <y>0</y>
+      <w>104</w>
+      <h>96</h>
+    </coordinates>
+    <panel_attributes>No
+lt=&lt;-</panel_attributes>
+    <additional_attributes>110.0;20.0;10.0;20.0;10.0;100.0</additional_attributes>
+  </element>
+  <element>
+    <type>com.baselet.element.old.element.State</type>
+    <coordinates>
+      <x>0</x>
+      <y>328</y>
+      <w>96</w>
+      <h>48</h>
+    </coordinates>
+    <panel_attributes>Modification
+Effective Datre</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLSpecialState</id>
+    <coordinates>
+      <x>224</x>
+      <y>328</y>
+      <w>48</w>
+      <h>48</h>
+    </coordinates>
+    <panel_attributes>bg=yellow
+type=decision</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>88</x>
+      <y>336</y>
+      <w>152</w>
+      <h>40</h>
+    </coordinates>
+    <panel_attributes>If Modification Effective
+Date With One Year?
+lt=&lt;-</panel_attributes>
+    <additional_attributes>170.0;20.0;12.0;18.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>240</x>
+      <y>368</y>
+      <w>104</w>
+      <h>72</h>
+    </coordinates>
+    <panel_attributes>Yes
+lt=&lt;-</panel_attributes>
+    <additional_attributes>110.0;70.0;10.0;70.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLState</id>
+    <coordinates>
+      <x>600</x>
+      <y>176</y>
+      <w>192</w>
+      <h>32</h>
+    </coordinates>
+    <panel_attributes>In Completed One Year or More 
+30-day delinquent list
+bg=green</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLState</id>
+    <coordinates>
+      <x>600</x>
+      <y>88</y>
+      <w>192</w>
+      <h>32</h>
+    </coordinates>
+    <panel_attributes>In Completed One Year or More 
+60-day delinquent list
+bg=green</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLState</id>
+    <coordinates>
+      <x>600</x>
+      <y>0</y>
+      <w>192</w>
+      <h>32</h>
+    </coordinates>
+    <panel_attributes>In Completed One Year or More 
+90-plus delinquent list
+bg=green</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.baselet.element.old.element.State</type>
+    <coordinates>
+      <x>64</x>
+      <y>240</y>
+      <w>120</w>
+      <h>48</h>
+    </coordinates>
+    <panel_attributes>Due Date of 
+Next Payment</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.baselet.element.old.element.State</type>
+    <coordinates>
+      <x>64</x>
+      <y>440</y>
+      <w>120</w>
+      <h>48</h>
+    </coordinates>
+    <panel_attributes>Due Date of 
+Next Payment</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.baselet.element.old.element.SynchBarVertical</type>
+    <coordinates>
+      <x>320</x>
+      <y>232</y>
+      <w>16</w>
+      <h>96</h>
+    </coordinates>
+    <panel_attributes/>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>240</x>
+      <y>280</y>
+      <w>104</w>
+      <h>64</h>
+    </coordinates>
+    <panel_attributes>No
+lt=&lt;-</panel_attributes>
+    <additional_attributes>110.0;20.0;10.0;20.0;10.0;60.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>176</x>
+      <y>248</y>
+      <w>168</w>
+      <h>32</h>
+    </coordinates>
+    <panel_attributes>
+lt=&lt;-</panel_attributes>
+    <additional_attributes>190.0;20.0;10.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <type>com.baselet.element.old.element.SynchBarVertical</type>
+    <coordinates>
+      <x>320</x>
+      <y>392</y>
+      <w>16</w>
+      <h>96</h>
+    </coordinates>
+    <panel_attributes/>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>176</x>
+      <y>448</y>
+      <w>168</w>
+      <h>32</h>
+    </coordinates>
+    <panel_attributes>
+lt=&lt;-</panel_attributes>
+    <additional_attributes>190.0;20.0;10.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>320</x>
+      <y>264</y>
+      <w>192</w>
+      <h>40</h>
+    </coordinates>
+    <panel_attributes>If Current or less
+than 30-day Delinquent?
+lt=&lt;-</panel_attributes>
+    <additional_attributes>220.0;20.0;10.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLSpecialState</id>
+    <coordinates>
+      <x>496</x>
+      <y>416</y>
+      <w>48</w>
+      <h>48</h>
+    </coordinates>
+    <panel_attributes>bg=yellow
+type=decision</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>320</x>
+      <y>424</y>
+      <w>192</w>
+      <h>40</h>
+    </coordinates>
+    <panel_attributes>If Current or less
+than 30-day Delinquent?
+lt=&lt;-</panel_attributes>
+    <additional_attributes>220.0;20.0;10.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>536</x>
+      <y>424</y>
+      <w>80</w>
+      <h>32</h>
+    </coordinates>
+    <panel_attributes>Yes
+lt=&lt;-</panel_attributes>
+    <additional_attributes>80.0;20.0;10.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLState</id>
+    <coordinates>
+      <x>600</x>
+      <y>424</y>
+      <w>192</w>
+      <h>32</h>
+    </coordinates>
+    <panel_attributes>In Completed Within One Year
+Current list
+bg=green</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>512</x>
+      <y>456</y>
+      <w>320</w>
+      <h>64</h>
+    </coordinates>
+    <panel_attributes>No, if more than 30 and less than 60 days delinquent?
+lt=&lt;-</panel_attributes>
+    <additional_attributes>10.0;60.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLSpecialState</id>
+    <coordinates>
+      <x>496</x>
+      <y>504</y>
+      <w>48</w>
+      <h>48</h>
+    </coordinates>
+    <panel_attributes>bg=yellow
+type=decision</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>536</x>
+      <y>512</y>
+      <w>80</w>
+      <h>32</h>
+    </coordinates>
+    <panel_attributes>Yes
+lt=&lt;-</panel_attributes>
+    <additional_attributes>80.0;20.0;10.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLState</id>
+    <coordinates>
+      <x>600</x>
+      <y>512</y>
+      <w>192</w>
+      <h>32</h>
+    </coordinates>
+    <panel_attributes>In Completed Within One Year
+30-day delinquent list
+bg=green</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>512</x>
+      <y>544</y>
+      <w>320</w>
+      <h>64</h>
+    </coordinates>
+    <panel_attributes>No, if more than 60 and less than 90 days delinquent?
+lt=&lt;-</panel_attributes>
+    <additional_attributes>10.0;60.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLSpecialState</id>
+    <coordinates>
+      <x>496</x>
+      <y>592</y>
+      <w>48</w>
+      <h>48</h>
+    </coordinates>
+    <panel_attributes>bg=yellow
+type=decision</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>536</x>
+      <y>600</y>
+      <w>80</w>
+      <h>32</h>
+    </coordinates>
+    <panel_attributes>Yes
+lt=&lt;-</panel_attributes>
+    <additional_attributes>80.0;20.0;10.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLState</id>
+    <coordinates>
+      <x>600</x>
+      <y>600</y>
+      <w>192</w>
+      <h>32</h>
+    </coordinates>
+    <panel_attributes>In Completed Within One Year
+60-day delinquent list
+bg=green</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>512</x>
+      <y>632</y>
+      <w>104</w>
+      <h>72</h>
+    </coordinates>
+    <panel_attributes>No
+lt=&lt;-</panel_attributes>
+    <additional_attributes>110.0;70.0;10.0;70.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLState</id>
+    <coordinates>
+      <x>600</x>
+      <y>672</y>
+      <w>192</w>
+      <h>32</h>
+    </coordinates>
+    <panel_attributes>In Completed Within One Year
+90-plus delinquent list
+bg=green</panel_attributes>
+    <additional_attributes/>
+  </element>
+</diagram>
