@@ -70,7 +70,7 @@ namespace com.sp.rmmc.collections.models
 
         protected string epd_conditions()
         {
-            return " and ( ms_loan_prin_bal > 0 )";
+            return " and ( " + MsLoan.MS_LOAN_PRIN_BAL + " > 0 )";
         }
 
         protected virtual List<BaseEPD> get_loan_list(String query)

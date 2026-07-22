@@ -151,17 +151,17 @@ namespace com.sp.rmmc.common.models
         {
             error = "";
             OleDbConnection dbConnection = get_connecetion();
-            try
+            // try
             {
                 if( dbConnection.State != ConnectionState.Open ) dbConnection.Open();
                 OleDbCommand cmd = new OleDbCommand(query, dbConnection);
                 return cmd.ExecuteReader();
             }
-            catch (Exception e)
-            {
-                error = e.Message;
-                return null;
-            }
+            // catch (Exception e)
+            // {
+            //     error = e.Message;
+            //     return null;
+            // }
         }
 
         protected static string executeStatement(string query)

@@ -29,6 +29,7 @@
             <h2>Delinquent Grid</h2>
         </div>
         <div class="span9">
+            <%= com.sp.rmmc.common.views.CommonNav.main_nav_select("Collections", new ADUser(HttpContext.Current.User.Identity.Name.ToString()))%>
             <%= com.sp.rmmc.collections.views.Navigations.sub_main_nav_select("Task List") %>
             <%= com.sp.rmmc.collections.views.Navigations.task_list_nav_select("Delinquent Grid") %>
         </div>

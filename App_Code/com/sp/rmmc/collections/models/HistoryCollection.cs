@@ -39,14 +39,189 @@ namespace com.sp.rmmc.collections.models
 
         protected override string collections_4_month_delinquent_query
         {
-            get 
+            get
             {
+                DateTimeObject history_date = new DateTimeObject();
+                history_date.set_date(this.loan.event_todays_date);
+
                 return
                     "( " +
                     " select * " +
                     " from collection_history_loan_details  " +
-                    " where ms_loan_due_date_next_payment <= dateadd(mm, -4, getDate()) " +
-                    " and history_id = " + this.history_id + " " +
+                    " where ms_loan_due_date_next_payment <= dateadd(mm, -3, " + history_date.toDBValue() + " ) " +
+                    " and history_id = " + this.history_id + " and " +
+                    " (ms_loan_type != 'FHA' or mortgage_status in ('42', '11', '12', '', '67', '98', 'AP', 'A0', 'AQ') or mortgage_status is null )" +
+                    ") ";
+            }
+        }
+
+        protected override string collections_17_days_fha_va_delinquent_query
+        {
+            get
+            {
+                DateTimeObject history_date = new DateTimeObject();
+                history_date.set_date(this.loan.event_todays_date);
+
+                return
+                    "( " +
+                    " select * " +
+                    " from collection_history_loan_details  " +
+                    " where ms_loan_due_date_next_payment <= dateadd(dd, -16, " + history_date.toDBValue() + " ) " +
+                    " and   ms_loan_due_date_next_payment > dateadd(mm, -1, " + history_date.toDBValue() + " ) " +
+                    " and history_id = " + this.history_id +
+                    " and (ms_loan_type = 'FHA' or  ms_loan_type = 'VA') " +
+                    ") ";
+            }
+        }
+
+        protected override string collections_17_days_cnv_non_c_mcm_delinquent_query
+        {
+            get
+            {
+                DateTimeObject history_date = new DateTimeObject();
+                history_date.set_date(this.loan.event_todays_date);
+
+                return
+                    "( " +
+                    " select * " +
+                    " from collection_history_loan_details  " +
+                    " where ms_loan_due_date_next_payment <= dateadd(dd, -16, " + history_date.toDBValue() + " ) " +
+                    " and   ms_loan_due_date_next_payment > dateadd(mm, -1, " + history_date.toDBValue() + " ) " +
+                    " and history_id = " + this.history_id +
+                    " and (ms_loan_type = 'CNV' and loan_plan_name not like 'C-MCM%') " +
+                    ") ";
+            }
+        }
+
+        protected override string collections_17_days_cnv_c_mcm_delinquent_query
+        {
+            get
+            {
+                DateTimeObject history_date = new DateTimeObject();
+                history_date.set_date(this.loan.event_todays_date);
+
+                return
+                    "( " +
+                    " select * " +
+                    " from collection_history_loan_details  " +
+                    " where ms_loan_due_date_next_payment <= dateadd(dd, -16, " + history_date.toDBValue() + " ) " +
+                    " and   ms_loan_due_date_next_payment > dateadd(mm, -1, " + history_date.toDBValue() + " ) " +
+                    " and history_id = " + this.history_id +
+                    " and (ms_loan_type = 'CNV' and loan_plan_name like 'C-MCM%') " +
+                    ") ";
+            }
+        }
+
+        protected override string collections_2_month_fha_delinquent_query
+        {
+            get
+            {
+                DateTimeObject history_date = new DateTimeObject();
+                history_date.set_date(this.loan.event_todays_date);
+
+                return
+                    "( " +
+                    " select * " +
+                    " from collection_history_loan_details  " +
+                    " where ms_loan_due_date_next_payment <= dateadd(mm, -1, " + history_date.toDBValue() + " ) " +
+                    " and   ms_loan_due_date_next_payment >= dateadd(mm, -2, " + history_date.toDBValue() + " ) " +
+                    " and history_id = " + this.history_id +
+                    " and (ms_loan_type = 'FHA') " +
+                    ") ";
+            }
+        }
+
+        protected override string collections_2_month_conv_delinquent_query
+        {
+            get
+            {
+                DateTimeObject history_date = new DateTimeObject();
+                history_date.set_date(this.loan.event_todays_date);
+
+                return
+                    "( " +
+                    " select * " +
+                    " from collection_history_loan_details  " +
+                    " where ms_loan_due_date_next_payment <= dateadd(mm, -1, " + history_date.toDBValue() + " ) " +
+                    " and   ms_loan_due_date_next_payment >= dateadd(mm, -2, " + history_date.toDBValue() + " ) " +
+                    " and history_id = " + this.history_id +
+                    " and (ms_loan_type = 'CNV') " +
+                    ") ";
+            }
+        }
+
+        protected override string collections_2_month_va_delinquent_query
+        {
+            get
+            {
+                DateTimeObject history_date = new DateTimeObject();
+                history_date.set_date(this.loan.event_todays_date);
+
+                return
+                    "( " +
+                    " select * " +
+                    " from collection_history_loan_details  " +
+                    " where ms_loan_due_date_next_payment <= dateadd(mm, -1, " + history_date.toDBValue() + " ) " +
+                    " and   ms_loan_due_date_next_payment >= dateadd(mm, -2, " + history_date.toDBValue() + " ) " +
+                    " and history_id = " + this.history_id +
+                    " and (ms_loan_type = 'VA') " +
+                    ") ";
+            }
+        }
+
+        protected override string collections_3_month_fha_hud_delinquent_query
+        {
+            get
+            {
+                DateTimeObject history_date = new DateTimeObject();
+                history_date.set_date(this.loan.event_todays_date);
+
+                return
+                    "( " +
+                    " select * " +
+                    " from collection_history_loan_details  " +
+                    " where ms_loan_due_date_next_payment <= dateadd(mm, -2, " + history_date.toDBValue() + " ) " +
+                    " and   ms_loan_due_date_next_payment >= dateadd(mm, -3, " + history_date.toDBValue() + " ) " +
+                    " and history_id = " + this.history_id +
+                    " and (ms_loan_type = 'FHA') " +
+                    ") ";
+            }
+        }
+
+        protected override string collections_3_month_conv_delinquent_query
+        {
+            get
+            {
+                DateTimeObject history_date = new DateTimeObject();
+                history_date.set_date(this.loan.event_todays_date);
+
+                return
+                    "( " +
+                    " select * " +
+                    " from collection_history_loan_details  " +
+                    " where ms_loan_due_date_next_payment <= dateadd(mm, -2, " + history_date.toDBValue() + " ) " +
+                    " and   ms_loan_due_date_next_payment >= dateadd(mm, -3, " + history_date.toDBValue() + " ) " +
+                    " and history_id = " + this.history_id +
+                    " and (ms_loan_type = 'CNV') " +
+                    ") ";
+            }
+        }
+
+        protected override string collections_3_month_va_delinquent_query
+        {
+            get
+            {
+                DateTimeObject history_date = new DateTimeObject();
+                history_date.set_date(this.loan.event_todays_date);
+
+                return
+                    "( " +
+                    " select * " +
+                    " from collection_history_loan_details  " +
+                    " where ms_loan_due_date_next_payment <= dateadd(mm, -2, " + history_date.toDBValue() + " ) " +
+                    " and   ms_loan_due_date_next_payment >= dateadd(mm, -3, " + history_date.toDBValue() + " ) " +
+                    " and history_id = " + this.history_id +
+                    " and (ms_loan_type = 'VA') " +
                     ") ";
             }
         }

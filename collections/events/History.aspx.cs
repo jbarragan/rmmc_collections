@@ -102,7 +102,7 @@ public partial class lossmitigation_Default : System.Web.UI.Page
         history.label = this.txtLabel.Text;
         history.history_date.set_date(DateTime.Today);
         history.insert();
-        (new CurrentCollection()).getCollections(accepted_bfs, removed_bfs);
+        (new CurrentCollection()).getCollectionsAndDemands(accepted_bfs, removed_bfs, "");
         if (history.id <= 0)
         {
             lblError.Text = "Error saving history: " + history.error;

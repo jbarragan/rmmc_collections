@@ -52,6 +52,16 @@ namespace com.sp.rmmc.common.models
             return s;
         }
 
+        public string toAccessDBValue()
+        {
+            string s = "NULL";
+            if (!this.isNull)
+            {
+                s = "#" + date.ToString("MM/dd/yyyy HH:mm:ss") + "#";
+            }
+            return s;
+        }
+
         public string toSQLAnywhereDBValue()
         {
             string s = "NULL";

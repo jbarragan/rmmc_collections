@@ -15,6 +15,7 @@ public partial class lossmitigation_Default : System.Web.UI.Page
     protected string event_type = "Different Reason Codes";
     protected string version = "current";
     protected string sublist = "ALL";
+    protected string section = "Collections";
     protected List<BaseEPD> bfs = new List<BaseEPD>();
     protected List<BaseEPD> all_bfs = new List<BaseEPD>();
     protected List<BaseEPD> accepted_bfs = new List<BaseEPD>();
@@ -31,6 +32,7 @@ public partial class lossmitigation_Default : System.Web.UI.Page
         this.sublist = getArg("sublist", "ALL");
         this.version = getArg("version", "current");
         int iverstion = stringToInt(version, 0);
+        this.section = getArg("section", "Collections");
 
         BaseEPD query = new CurrentEPD();
         if (iverstion > 0)

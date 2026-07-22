@@ -19,6 +19,7 @@
     </div>
     <div class="row">
         <div class="span12">
+            <%= com.sp.rmmc.common.views.CommonNav.main_nav_select("Collections", new ADUser(HttpContext.Current.User.Identity.Name.ToString()))%>
             <%= com.sp.rmmc.collections.views.Navigations.sub_main_nav_select("Events") %>
             <%= com.sp.rmmc.collections.views.Navigations.events_nav_select(workflow, version) %>
         </div>
@@ -51,6 +52,7 @@
     <div class="row">
         <div class="span12">
         <h2><%= this.workflow%> (<%= bfs.Count%>)</h2>
+        <asp:LinkButton ID="LinkButton1" runat="server" Text="Export" onclick="lbExportReasonCode_Click"></asp:LinkButton>
         <table class="table table-striped">
             <tr>
                 <th>Loan#</th>
@@ -93,6 +95,7 @@
     <div class="row">
         <div class="span12">
         <h2><%= this.workflow%> (<%= bfs.Count%>)</h2>
+        <asp:LinkButton ID="LinkButton2" runat="server" Text="Export" onclick="lbExportPromisedToPay_Click"></asp:LinkButton>
         <table class="table table-striped">
             <tr>
                 <th>Loan#</th>
@@ -166,6 +169,7 @@
        <div class="row">
         <div class="span12">
         <h2><%= this.workflow%> (<%= bfs.Count%>)</h2>
+        <asp:LinkButton ID="LinkButton4" runat="server" Text="Export" onclick="lbExport_Click"></asp:LinkButton>
         <table class="table table-striped">
             <tr>
                 <th>Loan#</th>
@@ -196,6 +200,7 @@
        <div class="row">
         <div class="span12">
         <h2><%= this.workflow%> (<%= bfs.Count%>)</h2>
+        <asp:LinkButton ID="LinkButton3" runat="server" Text="Export" onclick="lbExport_Click"></asp:LinkButton>
         <table class="table table-striped">
             <tr>
                 <th>Loan#</th>
@@ -225,8 +230,12 @@
         if (this.workflow == "FHA VA 17-day Call Listing" ||
             this.workflow == "Fannie Mae 17 day Call Listing" ||
             this.workflow == "Fannie Mae 17-day MCM Call Listing" ||
-            this.workflow == "HUD 3 Month Call Listing" ||  
-            this.workflow == "FHA 60 Day Call Listing")
+            this.workflow == "HUD 3 Month Call Listing" ||
+            this.workflow == "Fannie Mae 3 Month Call Listing" ||
+            this.workflow == "VA 3 Month Call Listing" ||
+            this.workflow == "FHA 60 Day Call Listing" ||
+            this.workflow == "Fannie Mae 2 Month Call Listing" ||
+            this.workflow == "VA 2 Month Call Listing")
         {
     %>
        <div class="row">
@@ -242,6 +251,11 @@
                 <th>Due Date of next payment</th>
                 <th>Investor</th>
                 <th>Collector</th>
+                <% if (this.workflow == "HUD 3 Month Call Listing" ||
+            this.workflow == "VA 3 Month Call Listing")
+               { %>
+                <th>Last Inspection</th>
+            <% } %>
             </tr>
             <% foreach (com.sp.rmmc.collections.models.BaseCollection bf in bfs)
                { 
@@ -252,6 +266,11 @@
                 <td><%= bf.loan.due_date_next_payment.ToShortDateString()%></td>
                 <td><%= bf.loan.loan_type%></td>
                 <td><%= bf.collector.collector %></td>
+                <% if (this.workflow == "HUD 3 Month Call Listing" ||
+                       this.workflow == "VA 3 Month Call Listing")
+               { %>
+                <td><%= bf.last_property_inspection_date.ToString() %></td>
+            <% } %>
              </tr>
             <%
                }

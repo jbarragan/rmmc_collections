@@ -1,0 +1,2 @@
+alter table collection_history_loan_details add
+	mortgage_status_date  datetime

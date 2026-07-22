@@ -17,7 +17,7 @@ namespace com.sp.rmmc.collections.models
         public DateTimeObject assigned_on = new DateTimeObject();
         public string collector = "";
 
-        private string[] current_collectors = {"smena", "lamaya", "ogonzalez"};
+        private string[] current_collectors = { "Martha Vera", "Alma Moreno", "Chrys Reyes" };
         private int latest_selected_collector = 0;
 
         private string connection_string = System.Configuration.ConfigurationManager.ConnectionStrings["collection"].ConnectionString;

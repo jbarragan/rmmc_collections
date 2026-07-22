@@ -19,6 +19,7 @@
     </div>
     <div class="row">
         <div class="span12">
+            <%= com.sp.rmmc.common.views.CommonNav.main_nav_select("Collections", new ADUser(HttpContext.Current.User.Identity.Name.ToString()))%>
             <%= com.sp.rmmc.collections.views.Navigations.sub_main_nav_select("") %>
         </div>
     </div>

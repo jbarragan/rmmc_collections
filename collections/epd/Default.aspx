@@ -19,7 +19,9 @@
     </div>
     <div class="row">
         <div class="span12">
-            <%= com.sp.rmmc.collections.views.Navigations.sub_main_nav_select("EPD") %>
+            <%= com.sp.rmmc.common.views.CommonNav.main_nav_select(this.section, new ADUser(HttpContext.Current.User.Identity.Name.ToString()))%>
+            <%= com.sp.rmmc.collections.views.Navigations.sub_main_nav_select_section("Reports", this.section, new ADUser(HttpContext.Current.User.Identity.Name.ToString()))%>
+            <%= com.sp.rmmc.collections.views.Navigations.collection_reports_nav_select_section("EPD", version, this.section)%>
         </div>
     </div>
     <!-- Example row of columns -->

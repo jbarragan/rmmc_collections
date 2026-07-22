@@ -17,6 +17,7 @@
         <h2><%= (this.history == null) ?  "Current" : "History: " + history.history_text %></h2>
         <p></p>
     </div>
+            <%= com.sp.rmmc.common.views.CommonNav.main_nav_select("Collections", new ADUser(HttpContext.Current.User.Identity.Name.ToString()))%>
     <%= com.sp.rmmc.collections.views.Navigations.sub_main_nav_select("Events") %>
     <%= com.sp.rmmc.collections.views.Navigations.events_nav_select("History", version)%>
         

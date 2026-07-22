@@ -40,15 +40,20 @@ public partial class lossmitigation_Default : System.Web.UI.Page
         if (iverstion > 0)
         {
             history = (new History()).get(iverstion);
-            if (history != null) query_collection = new HistoryCollection(history);
+            if (    history != null) query_collection = new HistoryCollection(history);
         }
-
+        bool check_filter = true;
         if (workflow == "Collections")
         {
             if (event_type == "Different Reason Codes")
-                query_collection.getCollections(accepted_bfs, removed_bfs);
+            {
+                //query_collection.getCollectionsAndDemandsWithReportType(accepted_bfs, removed_bfs, BaseCollection.REASON_CODE_REPORT);
+                //check_filter = true;
+                query_collection.getCollectionsAndDemandsDifferentReasonCodesWithReportType(accepted_bfs, removed_bfs, BaseCollection.REASON_CODE_REPORT);
+                check_filter = false;
+            }
             else
-                query_collection.getCollectionsAndDemands(accepted_bfs, removed_bfs);
+                query_collection.getCollectionsAndDemandsWithReportType(accepted_bfs, removed_bfs, BaseCollection.PROMISED_TO_REPORT);
         }
         else if (workflow == "4-Month Delinquent In Collections")
         {
@@ -74,9 +79,25 @@ public partial class lossmitigation_Default : System.Web.UI.Page
         {
             query_collection.getCollections2MonthFHADelinquent(accepted_bfs, removed_bfs);
         }
+        else if (workflow == "Fannie Mae 2 Month Call Listing")
+        {
+            query_collection.getCollections2MonthCONVDelinquent(accepted_bfs, removed_bfs);
+        }
+        else if (workflow == "VA 2 Month Call Listing")
+        {
+            query_collection.getCollections2MonthVADelinquent(accepted_bfs, removed_bfs);
+        }
         else if (workflow == "HUD 3 Month Call Listing")
         {
             query_collection.getCollections3MonthFHAHudDelinquent(accepted_bfs, removed_bfs);
+        }
+        else if (workflow == "Fannie Mae 3 Month Call Listing")
+        {
+            query_collection.getCollections3MonthCONVDelinquent(accepted_bfs, removed_bfs);
+        }
+        else if (workflow == "VA 3 Month Call Listing")
+        {
+            query_collection.getCollections3MonthVADelinquent(accepted_bfs, removed_bfs);
         }
         
 
@@ -85,9 +106,19 @@ public partial class lossmitigation_Default : System.Web.UI.Page
 
         populateddlLoanTypes();
         populateddlCollector();
-        populateddlEventType();
-
-        filter();
+        populateddlCollector();
+        if (check_filter)
+        {
+            populateddlEventType();
+            filter();
+        }
+        else
+        {
+            foreach (BaseCollection bf in accepted_bfs)
+            {
+                bfs.Add(bf);
+            }
+        }
 
         populate_collector_loans();
     }
@@ -255,6 +286,18 @@ public partial class lossmitigation_Default : System.Web.UI.Page
     {
         string filename = this.workflow + " " + DateTime.Today.ToString("MMMM yyyy") + " on ";
         CSVExport.writeHeadersAndCSV(filename, "Loan#, Loan Name, Due Date of next payment, Investor, Collector", this.accepted_bfs);
+    }
+
+    protected void lbExportReasonCode_Click(object sender, EventArgs e)
+    {
+        string filename = "Different Reason Codes " + DateTime.Today.ToString("MMMM yyyy") + " on ";
+        CSVExport.writeHeadersAndCSV(filename, "Loan#, Loan Type, Loan Name, Due Date of next payment, UPB, Interest Rate, Occupancy, Reason Code, Memo Reason Code, 031 Date", this.bfs);
+    }
+
+    protected void lbExportPromisedToPay_Click(object sender, EventArgs e)
+    {
+        string filename = this.event_type + " " + DateTime.Today.ToString("MMMM yyyy") + " on ";
+        CSVExport.writeHeadersAndCSV(filename, "Loan#, Loan Type, Loan Name, Due Date of next payment, Notify me date on Memo, Last 031 Date, UPB", this.bfs);
     }
 
 }

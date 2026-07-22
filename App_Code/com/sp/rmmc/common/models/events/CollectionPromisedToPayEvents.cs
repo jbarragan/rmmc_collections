@@ -19,15 +19,15 @@ namespace com.sp.rmmc.common.models.events
         public DateTimeObject last_current_paid_dt = new DateTimeObject();
 
         private static String[] class_fields = 
-            { 
-             "(select top 1 ms_loan_info.loan_id from ms_loan_information ms_loan_info where ms_loan_info.loan_id = loan_id_column order by ms_loan_info.loan_id  ) as collection_promise_to_pay_events_loan_id",
-             "(select top 1 memo.memo_notify_dt from ms_loan_memo memo, ms_memo_categories, ms_memo_types where memo.loan_id = loan_id_column and memo.memo_category_id = ms_memo_categories.memo_category_id and memo.memo_type_id = ms_memo_types.memo_type_id and (ms_memo_types.memo_type_desc = 'BC-Promised to Pay')  order by memo_notify_dt desc, memo.memo_create_dt desc ) as collection_promise_to_pay_events_last_memo_notify_dt",
-             "(select top 1 memo.memo_create_dt from ms_loan_memo memo, ms_memo_categories, ms_memo_types where memo.loan_id = loan_id_column and memo.memo_category_id = ms_memo_categories.memo_category_id and memo.memo_type_id = ms_memo_types.memo_type_id and ms_memo_categories.memo_category_desc like '031%' order by memo_create_dt desc ) as collection_promise_to_pay_events_no_contact_memo_031_create_dt",
-             "(select top 1 memo.memo_create_dt from ms_loan_memo memo, ms_memo_categories, ms_memo_types where memo.loan_id = loan_id_column and memo.memo_category_id = ms_memo_categories.memo_category_id and memo.memo_type_id = ms_memo_types.memo_type_id and (ms_memo_types.memo_type_desc = 'BC-First Right Party Contact')  order by memo_create_dt desc ) as collection_promise_to_pay_events_last_right_party_contact_create_dt",
-             "(select top 1 memo.memo_create_dt from ms_loan_memo memo, ms_memo_categories, ms_memo_types where memo.loan_id = loan_id_column and memo.memo_category_id = ms_memo_categories.memo_category_id and memo.memo_type_id = ms_memo_types.memo_type_id and (ms_memo_types.memo_type_desc = 'BC-Promised to Pay')  order by memo_notify_dt desc, memo.memo_create_dt desc ) as collection_promise_to_pay_events_last_promise_to_pay_memo_create_dt",
-             "(select top 1 hist.paid_dt from ms_loan_history hist where hist.loan_id = loan_id_column and hist.trans_type_cd = 'REG' order by paid_dt desc) as collection_promise_to_pay_events_last_reg_paid_dt ",
-             "(select top 1 hist.paid_dt from ms_loan_history hist where hist.loan_id = loan_id_column and hist.trans_type_cd = 'REG' and (due_dt > paid_dt or ( month(due_dt) = month(paid_dt) and year(due_dt) = year(paid_dt) ) ) order by paid_dt desc) as collection_promise_to_pay_events_last_current_paid_dt "
-            };
+        {
+            "ms_loan_information.loan_id as collection_promise_to_pay_events_loan_id",
+            "memo_last_promise_to_pay.memo_notify_dt as collection_promise_to_pay_events_last_memo_notify_dt",
+            "memo_last_031_reason_code_data.memo_create_dt as collection_promise_to_pay_events_no_contact_memo_031_create_dt",
+            "memo_last_first_right_party_contact.memo_create_dt as collection_promise_to_pay_events_last_right_party_contact_create_dt",
+            "memo_last_promise_to_pay.memo_create_dt as collection_promise_to_pay_events_last_promise_to_pay_memo_create_dt",
+            "history_reg.paid_dt as collection_promise_to_pay_events_last_reg_paid_dt",
+            "history_last_current_paid.paid_dt as collection_promise_to_pay_events_last_current_paid_dt ",
+        };
 
         public CollectionPromiseToPayEvents()
         {
@@ -56,7 +56,7 @@ namespace com.sp.rmmc.common.models.events
                 Event e = new Event();
                 e.loan = this.loan;
                 e.type = Event.ALERT;
-                e.name = "Promised To Pay Expired";
+                e.name = "Old Promised To Pay Expired";
                 e.description = "Promised To Pay notify date (" + this.last_memo_notify_dt.ToString() + ") expired for this collection.";
                 this.events.Add(e);
             }
@@ -64,8 +64,8 @@ namespace com.sp.rmmc.common.models.events
 
         private void check_last_current()
         {
-            if (this.loan_id == 901801M)
-                this.loan_id = 901801M;
+            if (this.loan_id == 132943M)
+                this.loan_id = 132943M;
 
             if (this.last_promise_to_pay_memo_create_dt.isNull == false &&
                 this.last_current_paid_dt.isNull == false &&
@@ -81,7 +81,7 @@ namespace com.sp.rmmc.common.models.events
                 Event e = new Event();
                 e.loan = this.loan;
                 e.type = Event.ALERT;
-                e.name = "Using Current Promised To Pay Expired";
+                e.name = "Promised To Pay Expired";
                 e.description = "Promised To Pay notify date (" + this.last_memo_notify_dt.ToString() + ") expired for this collection.";
                 this.events.Add(e);
             }

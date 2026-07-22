@@ -16,10 +16,11 @@
         <h1>Collections</h1>
         <p>Home</p>
     </div>
-    <%= com.sp.rmmc.collections.views.Navigations.main_nav %>
     <!-- Example row of columns -->
     <div class="row">
         <div class="span12">
+            <%= com.sp.rmmc.common.views.CommonNav.main_nav_select("Collections", new ADUser(HttpContext.Current.User.Identity.Name.ToString()))%>
+            <%= com.sp.rmmc.collections.views.Navigations.main_nav %>
             <p><a href="TaskList/Delinquent.aspx">Task List</a></p><p><a href="http://localrmmc/devintranet/lossmitigation/Collections/Default.aspx">LM Collections</a></p>
             <p class="text-error"><asp:Label ID="e" runat="server" Text="" ></asp:Label></p>
         </div>

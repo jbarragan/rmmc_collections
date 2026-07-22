@@ -128,7 +128,9 @@ public partial class lossmitigation_Default : System.Web.UI.Page
         insert_query += String.Join(", @", header.columns_list().ToArray());
         insert_query += ")";
         try{
-            foreach (BaseCollection bf in accepted_bfs)
+            all_bfs.AddRange(accepted_bfs);
+            all_bfs.AddRange(removed_bfs);
+            foreach (BaseCollection bf in all_bfs)
             {
                 SqlCommand cmd = model.getCommand();
                 cmd.CommandText = insert_query;
