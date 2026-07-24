@@ -202,24 +202,14 @@ public partial class lossmitigation_Default : System.Web.UI.Page
         ListItem li = new ListItem("ALL");
         ddlCollectors.Items.Add(li);
         List<String> collectors = new List<string>();
-        foreach (BaseCollection bf in all_bfs)
+        foreach (string c in (new LoanCollector()).get_last_30_days_collectors())
         {
-            bool is_new_collector = true;
-            foreach (string lo in collectors)
-            {
-                if (bf.collector.collector.Trim().ToUpper() == lo)
-                {
-                    is_new_collector = false;
-                    break;
-                }
-            }
-            if (is_new_collector)
-            {
-                collectors.Add(bf.collector.collector.ToUpper());
-                ListItem new_li = new ListItem(bf.collector.collector.Trim().ToUpper());
-                if (this.collector == bf.collector.collector.Trim().ToUpper()) new_li.Selected = true;
-                ddlCollectors.Items.Add(new_li);
-            }
+            string name = c.Trim().ToUpper();
+            if (name == "" || collectors.Contains(name)) continue;
+            collectors.Add(name);
+            ListItem new_li = new ListItem(name);
+            if (this.collector == name) new_li.Selected = true;
+            ddlCollectors.Items.Add(new_li);
         }
     }
 
@@ -298,7 +288,7 @@ public partial class lossmitigation_Default : System.Web.UI.Page
     protected void lbExport_Click(object sender, EventArgs e)
     {
         string filename = this.workflow + " " + DateTime.Today.ToString("MMMM yyyy") + " on ";
-        CSVExport.writeHeadersAndCSV(filename, "Loan#, Loan Name, Due Date of next payment, Investor, Collector", this.accepted_bfs);
+        CSVExport.writeHeadersAndCSV(filename, "Loan#,Loan Name,Due Date of next payment,Promised to Pay,Investor,Last Attempted Call Date,Collector", this.accepted_bfs);
     }
 
     protected void lbExportReasonCode_Click(object sender, EventArgs e)

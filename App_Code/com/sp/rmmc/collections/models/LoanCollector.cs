@@ -17,7 +17,10 @@ namespace com.sp.rmmc.collections.models
         public DateTimeObject assigned_on = new DateTimeObject();
         public string collector = "";
 
-        private string[] current_collectors = { "Martha Vera", "Alma Moreno", "Chrys Reyes" };
+        // Collectors are no longer hardcoded. This list is loaded at runtime with the
+        // collectors (ms_loan_memo user_ids) that made an outbound call/email in the last
+        // 30 days, and is used as the round-robin pool for loans without a last-call collector.
+        private List<string> current_collectors = new List<string>();
         private int latest_selected_collector = 0;
 
         private string connection_string = System.Configuration.ConfigurationManager.ConnectionStrings["collection"].ConnectionString;
@@ -72,21 +75,31 @@ namespace com.sp.rmmc.collections.models
 
         public void get_collections_collector(List<BaseCollection> collections)
         {
-            DateTime collection_date = DateTime.Today;
             int today_year_month = DateTime.Today.Year * 12 + DateTime.Today.Month;
+
+            // Priority 1: the collector is the user_id of the most recent outbound call/email
+            // memo on the loan (from ms_loan_memo on the servicing DB).
+            Dictionary<decimal, string> last_call_collectors = get_last_call_collectors(collections);
+
+            // Pool used for the round-robin fallback: collectors who called in the last 30 days.
+            this.current_collectors = get_last_30_days_collectors();
 
             List<BaseCollection> collections_without_collector = new List<BaseCollection>();
 
+            // Priority 2 (only for loans without a last-call collector): reuse the sticky
+            // assignment already persisted this month in loan_collectors.
             string query =
                 "select * from loan_collectors " +
                 "where id in ( " +
                 "select max(id) from loan_collectors " +
                 "where loan_id in ";
             List<string> collection_loans = new List<string>();
-            foreach (BaseCollection collection in collections) collection_loans.Add(collection.loan_id.ToString());
+            foreach (BaseCollection collection in collections)
+                if (!last_call_collectors.ContainsKey(collection.loan_id))
+                    collection_loans.Add(collection.loan_id.ToString());
             if (collection_loans.Count > 0) query += " (" + String.Join(", ", collection_loans.ToArray()) + " ) ";
             else query += " (-10) ";
-            query += 
+            query +=
                 "and YEAR(assigned_on)*12 + MONTH(assigned_on) = " + today_year_month.ToString() + " " +
                 "group by loan_id " +
                 ")";
@@ -101,7 +114,14 @@ namespace com.sp.rmmc.collections.models
 
             foreach (BaseCollection collection in collections)
             {
-                if (loan_lcs.ContainsKey(collection.loan_id))
+                if (last_call_collectors.ContainsKey(collection.loan_id))
+                {
+                    LoanCollector lc = new LoanCollector();
+                    lc.loan_id = collection.loan_id;
+                    lc.collector = last_call_collectors[collection.loan_id];
+                    collection.collector = lc;
+                }
+                else if (loan_lcs.ContainsKey(collection.loan_id))
                 {
                     LoanCollector lc = loan_lcs[collection.loan_id];
                     int assigned_on_year_month = lc.assigned_on.date.Year * 12 + lc.assigned_on.date.Month;
@@ -117,16 +137,82 @@ namespace com.sp.rmmc.collections.models
 
         }
 
+        // Returns loan_id -> user_id of the most recent (ever) outbound call/email memo for
+        // each loan in the list. Same "last attempted call" definition used by UnfilteredCollection.
+        public Dictionary<decimal, string> get_last_call_collectors(List<BaseCollection> collections)
+        {
+            Dictionary<decimal, string> last_call_collectors = new Dictionary<decimal, string>();
+
+            List<string> loan_ids = new List<string>();
+            foreach (BaseCollection collection in collections) loan_ids.Add(collection.loan_id.ToString());
+            if (loan_ids.Count == 0) return last_call_collectors;
+
+            string query =
+                "select m.loan_id, m.user_id " +
+                "from ms_loan_memo m " +
+                "where (m.memo_subject like '%OUTBOUND%CALL%' or m.memo_subject like '%O%EMAIL%') " +
+                "and m.loan_id in (" + String.Join(", ", loan_ids.ToArray()) + ") " +
+                "and m.actual_create_dt = ( " +
+                "    select max(m2.actual_create_dt) from ms_loan_memo m2 " +
+                "    where m2.loan_id = m.loan_id " +
+                "    and (m2.memo_subject like '%OUTBOUND%CALL%' or m2.memo_subject like '%O%EMAIL%') ) ";
+
+            SybaseModel model = new SybaseModel();
+            DbDataReader reader = model.getReader(query);
+            if (reader != null)
+            {
+                while (reader.Read())
+                {
+                    decimal loan_id = readDBDecimal(reader, 0);
+                    string user_id = readDBString(reader, 1).Trim();
+                    if (loan_id > 0 && user_id != "" && !last_call_collectors.ContainsKey(loan_id))
+                        last_call_collectors.Add(loan_id, user_id);
+                }
+                reader.Close();
+            }
+            model.close_connection();
+            return last_call_collectors;
+        }
+
+        // Returns the distinct collectors (ms_loan_memo user_ids) that made an outbound
+        // call/email in the last 30 days. Used for the round-robin fallback and the dropdown.
+        public List<string> get_last_30_days_collectors()
+        {
+            List<string> collectors = new List<string>();
+
+            string query =
+                "select distinct m.user_id " +
+                "from ms_loan_memo m " +
+                "where (m.memo_subject like '%OUTBOUND%CALL%' or m.memo_subject like '%O%EMAIL%') " +
+                "and m.actual_create_dt >= dateadd(dd, -30, getdate()) " +
+                "and m.user_id is not null and m.user_id <> '' ";
+
+            SybaseModel model = new SybaseModel();
+            DbDataReader reader = model.getReader(query);
+            if (reader != null)
+            {
+                while (reader.Read())
+                {
+                    string user_id = readDBString(reader, 0).Trim();
+                    if (user_id != "" && !collectors.Contains(user_id)) collectors.Add(user_id);
+                }
+                reader.Close();
+            }
+            model.close_connection();
+            return collectors;
+        }
+
         public void populate_collections_without_collector(List<BaseCollection> collections)
         {
-            latest_selected_collector = DateTime.Today.DayOfYear % current_collectors.Length;
+            if (this.current_collectors.Count == 0) return; // no callers in the last 30 days to assign from
+            latest_selected_collector = DateTime.Today.DayOfYear % current_collectors.Count;
             List<LoanCollector> lcs = new List<LoanCollector>();
             foreach (BaseCollection collection in collections)
             {
                 LoanCollector lc = new LoanCollector();
                 lc.loan_id = collection.loan_id;
                 lc.assigned_on.set_date(DateTime.Today);
-                lc.collector = this.current_collectors[(latest_selected_collector++) % this.current_collectors.Length];
+                lc.collector = this.current_collectors[(latest_selected_collector++) % this.current_collectors.Count];
                 collection.collector = lc;
                 lcs.Add(lc);
             }

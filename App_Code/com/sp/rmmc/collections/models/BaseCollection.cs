@@ -1419,13 +1419,13 @@ namespace com.sp.rmmc.collections.models
                 return this.loan_id.ToString() + ",\"" + this.loan.loan_name + "\"," +
                     this.loan.due_date_next_payment.ToString() + "," +
                     ((this.last_memo_promise_to_pay_notify_dt.isNull == false && this.last_memo_promise_to_pay_notify_dt.date > DateTime.Today.AddDays(-1)) ? this.last_memo_promise_to_pay_notify_dt.ToString() : "") + "," +
-                    this.loan.loan_type + "," + this.collector.collector;
+                    this.loan.loan_type + "," + this.last_attempted_call_dt.ToString() + "," + this.collector.collector;
             }
 
             return this.loan_id.ToString() + ",\"" + this.loan.loan_name + "\"," +
                 this.loan.due_date_next_payment.ToString() + "," +
                 ((this.last_memo_promise_to_pay_notify_dt.isNull == false && this.last_memo_promise_to_pay_notify_dt.date > DateTime.Today.AddDays(-1)) ? this.last_memo_promise_to_pay_notify_dt.ToString() : "") + "," +
-                this.loan.loan_type + "," + this.last_attempted_call_dt.ToString();
+                this.loan.loan_type + "," + this.last_attempted_call_dt.ToString() + "," + this.collector.collector;
         }
 
         public int months_late()
